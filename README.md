@@ -1,4 +1,4 @@
-PikadayAngular (with Angular4 or up)
+PikadayAngular (with Angular4)
 ====================================
 
 ### A Dart Datepicker usable as a AngularDart component

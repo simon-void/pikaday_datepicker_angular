@@ -1,6 +1,6 @@
 name: pikaday_datepicker_angular
 description: Provides a datepicker for Angular4 component which wrapps the lightweight pikaday js-library.
-version: 3.0.0
+version: 3.0.1
 author: Stephan Schroeder <simon.void+github@gmail.com>
 homepage: https://github.com/simon-void/pikaday_datepicker_angular
 environment:
@@ -21,7 +21,7 @@ transformers:
 ### configuration if example web folder should be compiled to js
 #- angular:
 #    entry_points: web/main.dart
-- dart_to_js_script_rewriter
+#- dart_to_js_script_rewriter
 
 # Uncomment the following in sdk 1.24+ to make pub serve
 # use dartdevc (webdev.dartlang.org/tools/dartdevc).
