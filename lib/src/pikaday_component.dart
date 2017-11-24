@@ -57,6 +57,12 @@ class PikadayComponent implements AfterViewInit {
     }
   }
 
+  /// <bool> or <String>. Forwards to [PikadayOptions.autoClose]. Look there for more info.
+  @Input()
+  void set autoClose(value) {
+    _options.autoClose = boolValue(value);
+  }
+
   /// <bool> or <String>. Forwards to [PikadayOptions.use24hour]. Look there for more info.
   @Input()
   void set use24hour(value) {
