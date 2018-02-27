@@ -36,7 +36,7 @@ class PikadayComponent implements AfterViewInit {
   String placeholder;
 
   Pikaday _pikaday;
-  final _options = new PikadayOptions();
+  final PikadayOptions _options = new PikadayOptions();
 
   bool get _isInitPhase => _pikaday == null;
 
@@ -55,6 +55,60 @@ class PikadayComponent implements AfterViewInit {
       var dayMillies = day?.millisecondsSinceEpoch;
       setPikadayMillisecondsSinceEpoch(_pikaday, dayMillies);
     }
+  }
+
+  /// <bool> or <String>. Forwards to [PikadayOptions.autoClose]. Look there for more info.
+  @Input()
+  void set autoClose(value) {
+    _options.autoClose = boolValue(value);
+  }
+
+  /// <bool> or <String>. Forwards to [PikadayOptions.use24hour]. Look there for more info.
+  @Input()
+  void set use24hour(value) {
+    _options.use24hour = boolValue(value);
+  }
+
+  /// <bool> or <String>. Forwards to [PikadayOptions.showTime]. Look there for more info.
+  @Input()
+  void set showTime(value) {
+    _options.showTime = boolValue(value);
+  }
+
+  /// Forwards to [PikadayOptions.timeLabel]. Look there for more info.
+  @Input()
+  void set timeLabel(String value) {
+    _options.timeLabel = value;
+  }
+
+  /// <bool> or <String>. Forwards to [PikadayOptions.showMinutes]. Look there for more info.
+  @Input()
+  void set showMinutes(value) {
+    _options.showMinutes = boolValue(value);
+  }
+
+  /// <bool> or <String>. Forwards to [PikadayOptions.showSeconds]. Look there for more info.
+  @Input()
+  void set showSeconds(value) {
+    _options.showSeconds = boolValue(value);
+  }
+
+  /// Forwards to [PikadayOptions.incrementHourBy]. Look there for more info.
+  @Input()
+  void set incrementHourBy(num value) {
+    _options.incrementHourBy = value;
+  }
+
+  /// Forwards to [PikadayOptions.incrementMinuteBy]. Look there for more info.
+  @Input()
+  void set incrementMinuteBy(num value) {
+    _options.incrementMinuteBy = value;
+  }
+
+  /// Forwards to [PikadayOptions.incrementSecondBy]. Look there for more info.
+  @Input()
+  void set incrementSecondBy(num value) {
+    _options.incrementSecondBy = value;
   }
 
   /// <bool> or <String>. Forwards to [PikadayOptions.bound]. Look there for more info.
