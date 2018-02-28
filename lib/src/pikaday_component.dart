@@ -36,112 +36,135 @@ class PikadayComponent implements AfterViewInit {
   String placeholder;
 
   Pikaday _pikaday;
-  final PikadayOptions _options = new PikadayOptions();
+  // default options
+  final PikadayOptions _options = new PikadayOptions(
+      showTime: false,
+      autoClose: true,
+      use24hour: false,
+      incrementMinuteBy: 15,
+      incrementSecondBy: 10,
+      showSeconds: false);
 
   bool get _isInitPhase => _pikaday == null;
 
-  /// Emits selected dates.
+  /// Emits selected dates (day and time).
   final _dayChange = new StreamController<DateTime>();
   @Output()
   Stream<DateTime> get dayChange => _dayChange.stream;
 
-  /// Combines [PikadayOptions.defaultDate] with [PikadayOptions.setDefaultDate]. Look there for more info.
+  /// The initially selected day and time
+  /// Combines [PikadayOptions.defaultDate] with [PikadayOptions.setDefaultDate]. 
   @Input()
   void set day(DateTime day) {
     if (_isInitPhase) {
       _options.defaultDate = day;
-      _options.setDefaultDate = day!=null;
+      _options.setDefaultDate = day != null;
     } else {
       var dayMillies = day?.millisecondsSinceEpoch;
       setPikadayMillisecondsSinceEpoch(_pikaday, dayMillies);
     }
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.autoClose]. Look there for more info.
-  @Input()
-  void set autoClose(value) {
-    _options.autoClose = boolValue(value);
-  }
-
-  /// <bool> or <String>. Forwards to [PikadayOptions.use24hour]. Look there for more info.
-  @Input()
-  void set use24hour(value) {
-    _options.use24hour = boolValue(value);
-  }
-
-  /// <bool> or <String>. Forwards to [PikadayOptions.showTime]. Look there for more info.
+  /// Optional boolean property to specify whether to show time controls with calendar or not.
+  /// <bool> or <String>. default: false. Forwards to [PikadayOptions.showTime]. 
   @Input()
   void set showTime(value) {
     _options.showTime = boolValue(value);
   }
 
-  /// Forwards to [PikadayOptions.timeLabel]. Look there for more info.
+  /// Optional numeric property to prevent calendar from auto-closing after date is selected.
+  /// <bool> or <String>. default: true. Should probably be false if showTime: true. Forwards to [PikadayOptions.autoClose]. 
+  @Input()
+  void set autoClose(value) {
+    _options.autoClose = boolValue(value);
+  }
+
+  /// Optional boolean property to specify whether to use 24 hours format or not.
+  /// <bool> or <String>. default: false. Forwards to [PikadayOptions.use24hour]. 
+  @Input()
+  void set use24hour(value) {
+    _options.use24hour = boolValue(value);
+  }
+
+  /// Optional string added to left of time select.
+  /// Forwards to [PikadayOptions.timeLabel]. 
   @Input()
   void set timeLabel(String value) {
     _options.timeLabel = value;
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.showMinutes]. Look there for more info.
+  /// Optional boolean property to specify whether to show minute controls with calendar or not.  /// <bool> or <String>. default: true. Forwards to [PikadayOptions.showMinutes]. 
   @Input()
   void set showMinutes(value) {
     _options.showMinutes = boolValue(value);
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.showSeconds]. Look there for more info.
+  /// Optional boolean property to specify whether to show second controls with calendar or not.
+  /// <bool> or <String>. default: false. Forwards to [PikadayOptions.showSeconds]. 
   @Input()
   void set showSeconds(value) {
     _options.showSeconds = boolValue(value);
   }
 
-  /// Forwards to [PikadayOptions.incrementHourBy]. Look there for more info.
+  /// default: 1. Forwards to [PikadayOptions.incrementHourBy]. 
   @Input()
   void set incrementHourBy(num value) {
     _options.incrementHourBy = value;
   }
 
-  /// Forwards to [PikadayOptions.incrementMinuteBy]. Look there for more info.
+  /// default: 15. Forwards to [PikadayOptions.incrementMinuteBy]. 
   @Input()
   void set incrementMinuteBy(num value) {
     _options.incrementMinuteBy = value;
   }
 
-  /// Forwards to [PikadayOptions.incrementSecondBy]. Look there for more info.
+  /// default: 10. Forwards to [PikadayOptions.incrementSecondBy]. 
   @Input()
   void set incrementSecondBy(num value) {
     _options.incrementSecondBy = value;
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.bound]. Look there for more info.
+  /// Automatically show/hide the datepicker on field focus.
+  /// Default: true if field is set.
+  /// <bool> or <String>. Forwards to [PikadayOptions.bound]. 
   @Input()
   void set bound(bound) {
     _options.bound = boolValue(bound);
   }
 
-  /// Forwards to [PikadayOptions.position]. Look there for more info.
+  /// Preferred position of the datepicker relative to the form field
+  /// (e.g. 'top right'). Automatic adjustment may occur to avoid
+  /// displaying outside the viewport. Default: 'bottom left'.
+  /// Forwards to [PikadayOptions.position]. 
   @Input()
   void set position(String position) {
     _options.position = position;
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.reposition]. Look there for more info.
+  /// Can be set to false to not reposition the datepicker within the
+  /// viewport, forcing it to take the configured position. Default: true.
+  /// <bool> or <String>. Forwards to [PikadayOptions.reposition].
   @Input()
   void set reposition(reposition) {
     _options.reposition = boolValue(reposition);
   }
 
-  /// Forwards to [PikadayOptions.format]. Look there for more info.
+  /// The default output format for toString() and field value.
+  /// Requires Moment.js for custom formatting.
+  /// Forwards to [PikadayOptions.format].
   @Input()
   void set format(String format) {
     _options.format = format;
   }
 
-  /// <int> or <String>. Forwards to [PikadayOptions.firstDay]. Look there for more info.
+  /// First day of the week (0: Sunday, 1: Monday, etc).
+  /// <int> or <String>. Forwards to [PikadayOptions.firstDay]. 
   @Input()
   void set firstDay(firstDay) {
     _options.firstDay = intValue(firstDay);
   }
 
-  /// <DateTime> or <String> with format YYYY-MM-DD. Forwards to [PikadayOptions.minDate]. Look there for more info.
+  /// <DateTime> or <String> with format YYYY-MM-DD. Forwards to [PikadayOptions.minDate]. 
   @Input()
   void set minDate(minDate) {
     final minDateAsDateTime = dayValue(minDate);
@@ -153,7 +176,7 @@ class PikadayComponent implements AfterViewInit {
     }
   }
 
-  /// <DateTime> or <String> with format YYYY-MM-DD. Forwards to [PikadayOptions.maxDate]. Look there for more info.
+  /// <DateTime> or <String> with format YYYY-MM-DD. Forwards to [PikadayOptions.maxDate]. 
   @Input()
   void set maxDate(maxDate) {
     final maxDateAsDateTime = dayValue(maxDate);
@@ -165,63 +188,74 @@ class PikadayComponent implements AfterViewInit {
     }
   }
 
-  /// Forwards to [PikadayOptions.disableWeekends]. Look there for more info.
+  /// Disallow selection of Saturdays and Sundays.
+  /// Forwards to [PikadayOptions.disableWeekends]. 
   @Input()
   void set disableWeekends(disableWeekends) {
     _options.disableWeekends = boolValue(disableWeekends);
   }
 
   /// <int>, <List<int>> or <String> (single '1990' or double '1980,2020').
-  /// Forwards to [PikadayOptions.yearRange]. Look there for more info.
+  /// Forwards to [PikadayOptions.yearRange]. 
   @Input()
   void set yearRange(yearRange) {
     _options.yearRange = yearRangeValue(yearRange);
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.showWeekNumber]. Look there for more info.
+  /// Show the ISO week number at the head of the row. Default: false.
+  /// <bool> or <String>. Forwards to [PikadayOptions.showWeekNumber]. 
   @Input()
   void set showWeekNumber(showWeekNumber) {
     _options.showWeekNumber = boolValue(showWeekNumber);
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.isRTL]. Look there for more info.
+  /// Reverse the calendar for right-to-left languages. Default: false.
+  /// <bool> or <String>. Forwards to [PikadayOptions.isRTL]. 
   @Input()
   void set isRTL(isRTL) {
     _options.isRTL = boolValue(isRTL);
   }
 
-  /// Forwards to [PikadayOptions.i18n]. Look there for more info.
+  /// Language defaults for month and weekday names.
+  /// Forwards to [PikadayOptions.i18n]. 
   @Input()
   void set i18n(PikadayI18nConfig i18n) {
     _options.i18n = i18n;
   }
 
-  /// Forwards to [PikadayOptions.yearSuffix]. Look there for more info.
+  /// Additional text to append to the year in the title.
+  /// Forwards to [PikadayOptions.yearSuffix]. 
   @Input()
   void set yearSuffix(String yearSuffix) {
     _options.yearSuffix = yearSuffix;
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.showMonthAfterYear]. Look there for more info.
+  /// Render the month after the year in the title. Default: false.
+  /// <bool> or <String>. Forwards to [PikadayOptions.showMonthAfterYear]. 
   @Input()
   void set showMonthAfterYear(showMonthAfterYear) {
     _options.showMonthAfterYear = boolValue(showMonthAfterYear);
   }
 
-  /// <bool> or <String>. Forwards to [PikadayOptions.showDaysInNextAndPreviousMonths]. Look there for more info.
+  /// Render days of the calendar grid that fall in the next or previous months to the current month instead of rendering an empty table cell. Default: false.
+  /// <bool> or <String>. Forwards to [PikadayOptions.showDaysInNextAndPreviousMonths]. 
   @Input()
   void set showDaysInNextAndPreviousMonths(showDaysInNextAndPreviousMonths) {
     _options.showDaysInNextAndPreviousMonths =
         boolValue(showDaysInNextAndPreviousMonths);
   }
 
-  /// <int> or <String>. Forwards to [PikadayOptions.numberOfMonths]. Look there for more info.
+  /// Number of visible calendars.
+  /// <int> or <String>. Forwards to [PikadayOptions.numberOfMonths]. 
   @Input()
   void set numberOfMonths(numberOfMonths) {
     _options.numberOfMonths = intValue(numberOfMonths);
   }
 
-  /// Forwards to [PikadayOptions.mainCalendar]. Look there for more info.
+  /// When numberOfMonths is used, this will help you to choose where the
+  /// main calendar will be (default left, can be set to right). Only used
+  /// for the first display or when a selected date is not already visible.
+  /// Forwards to [PikadayOptions.mainCalendar]. 
   /// permitted values: "left", "right";
   @Input()
   void set mainCalendar(String mainCalendar) {
@@ -232,7 +266,9 @@ class PikadayComponent implements AfterViewInit {
         "should only be 'left' or 'right', but was: $mainCalendar");
   }
 
-  /// Forwards to [PikadayOptions.theme]. Look there for more info.
+  /// Define a class name that can be used as a hook for styling different
+  /// themes. Default: null.
+  /// Forwards to [PikadayOptions.theme]. 
   @Input()
   void set theme(String theme) {
     _options.theme = theme;
@@ -262,21 +298,21 @@ class PikadayComponent implements AfterViewInit {
       DateTime minDate,
       DateTime maxDate,
     ) {
-      if(day!=null) {
+      if (day != null) {
         var millies = day.millisecondsSinceEpoch;
         setPikadayMillisecondsSinceEpoch(_pikaday, millies);
       }
-      if(minDate!=null) {
+      if (minDate != null) {
         var millies = minDate.millisecondsSinceEpoch;
         setPikadayMinDateAsMillisecondsSinceEpoch(_pikaday, millies);
       }
-      if(maxDate!=null) {
+      if (maxDate != null) {
         var millies = maxDate.millisecondsSinceEpoch;
         setPikadayMaxDateAsMillisecondsSinceEpoch(_pikaday, millies);
       }
     }
+
     workaroundDateTimeConversionIssue(
-      _options.defaultDate, _options.minDate, _options.maxDate
-    );
+        _options.defaultDate, _options.minDate, _options.maxDate);
   }
 }

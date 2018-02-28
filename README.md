@@ -34,30 +34,45 @@ an link accordingly.
 
 ### Angular
 
-Check out the example under web!
+Check out the example in web/main.dart!
 
 Import and use **PikadayComponent** into your AngularDart component:
 
 ```dart
-import 'package:angular/angular.dart';
 import 'package:pikaday_datepicker_angular/pikaday_datepicker_angular.dart';
 
-void main() {
-  bootstrap(AppComponent);
-}
-
-// example app to showcase the PikadayComponent.
+// example of how to use the PikadayComponent to display a day picker.
 @Component(
-    selector: 'showcase-pikadate-component',
-    template: '''<pikaday [(day)]="selectedDay" format="DD-MM-YYYY"
-                          firstDay="1" minDate="2010-1-1" maxDate="2025-12-31"
+    selector: 'pick-day-component',
+    template: '''<pikaday [(day)]="selectedDay" format="YYYY-MM-DD"
                           placeholder="select a day">
                  </pikaday>
-                 <div>selectedDay: {{selectedDay | date}}</div>''',
+                 <div>day: {{selectedDay | date}}</div>''',
     directives: const [PikadayComponent],
     pipes: const [COMMON_PIPES])
-class AppComponent {
+class DayPickerComponent {
   DateTime selectedDay = new DateTime(2015, 2, 1);
+}
+
+// example of how to use the PikadayComponent to display a day and time picker.
+@Component(
+    selector: 'pick-day-time-component',
+    template: '''<pikaday [(day)]="selectedDayTime" format="YYYY-MM-DD h:mm A"
+                          firstDay="1" minDate="2010-1-1" maxDate="2025-12-31"
+                          [showTime]="true" [autoClose]="false" [incrementMinuteBy]="5"
+                          placeholder="select a day and time">
+                 </pikaday>
+                 <div>day: {{selectedDayTime | date}}</div>
+                 <div>time: {{daytime24}} o'clock</div>''',
+    directives: const [PikadayComponent],
+    pipes: const [COMMON_PIPES])
+class DayTimePickerComponent {
+  String get daytime24 =>
+      "${selectedDayTime.hour}:${_padTimeAs2Chars(selectedDayTime.minute)}";
+  DateTime selectedDayTime = new DateTime(2015, 2, 1, 13, 30);
+
+  String _padTimeAs2Chars(int hoursOrMinutes) =>
+      hoursOrMinutes < 10 ? "0$hoursOrMinutes" : hoursOrMinutes.toString();
 }
 ```
 
@@ -85,7 +100,7 @@ PikadayComponent has many useful options:
 - one-way attributes
   - `cssClasses` setting css classes on input (<input class="{{cssClasses}}>)
   - `placeholder` sets the placeholder of the pikaday-inputfield
-- attributes directly used to initialize PikadayParams
+- date attributes directly used to initialize PikadayParams
   - `bound` automatically show/hide the datepicker on input field focus (default `true` if `field` is set)
   - `position` preferred position of the datepicker relative to the form field, e.g.: `top right`, `bottom right` **Note:** automatic adjustment may occur to avoid datepicker from being displayed outside the viewport, see (default to 'bottom left')
   - `reposition` can be set to false to not reposition datepicker within the viewport, forcing it to take the configured `position` (default: true)
@@ -105,6 +120,16 @@ PikadayComponent has many useful options:
   - `numberOfMonths` number of visible calendars
   - `mainCalendarIsLeft` when `numberOfMonths` is used, this will help you to choose where the main calendar will be (default `true`/`left`, can be set to `false`/`right`). Only used for the first display or when a selected date is not already visible
   - `theme` define a classname that can be used as a hook for styling different themes (default `null`)
+- time attributes directly used to initialize PikadayParams
+  - `autoClose` bool or boolish string
+  - `use24hour` bool or boolish string
+  - `showTime` bool or boolish string
+  - `timeLabel` string
+  - `showMinutes` bool or boolish string
+  - `showSeconds` bool or boolish string
+  - `incrementHourBy` num
+  - `incrementMinuteBy` num
+  - `incrementSecondBy` num
 
 ### Common problems
 
@@ -124,6 +149,10 @@ You forgot to import pikaday_dart_helpers.js in your html-file.
 ## Authors
 
 * Stephan Schröder [GitHub](https://github.com/simon-void)
+
+## Contributors
+
+* Tobechukwu Osakwe [GitHub](https://github.com/thosakwe)
 
 Thanks to [David Bushell](https://github.com/dbushell) for writing [Pikaday.js].
 Thanks to [John Ryan](https://github.com/johnpryan) for writing [Pikaday].
