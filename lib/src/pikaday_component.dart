@@ -274,6 +274,24 @@ class PikadayComponent implements AfterViewInit {
     _options.theme = theme;
   }
 
+  /// Use a different element to trigger opening the datepicker.
+  /// Default: field element.
+  /// Forwards to [PikadayOptions.trigger].
+  @Input()
+  void set trigger(HtmlElement trigger) {
+    _options.trigger = trigger;
+  }
+
+  /// Shows the pikaday
+  void show() {
+    _pikaday?.show();
+  }
+
+  /// Hides the pikaday
+  void hide() {
+    _pikaday?.hide();
+  }
+
   @override
   ngAfterViewInit() {
     _options.field = querySelector('#$id');
